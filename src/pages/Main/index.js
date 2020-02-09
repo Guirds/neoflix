@@ -6,45 +6,53 @@ import api from '../../services/api';
 import Sidebar from '../../components/Sidebar';
 import PreviewMovie from '../../components/PreviewMovie';
 
-import { Container, SubmitButton, Form, Content } from './style';
+import { Container, SubmitButton, Form, Content, Movies } from './style';
 
 export default class Main extends Component{
   state ={
     search: '',
-    list_movies: '',
+    list_movies: [],
   };
 
   async componentDidMount(){
-    const response = await api.get('/list_movies.json');
+    const response = await api.get('/list_movies.jsonp');
 
     this.setState({list_movies: response.data.data.movies});
 
+    console.log(this.state.list_movies);
   }
 
 
   handleInputChange = e =>{
-    this.setState({ serach: e.target.value });
+    this.setState({ search: e.target.value  });
   }
 
-  handleSubmit = async e =>{
-    e.preventDefault();
+  handleSubmit = movie =>{
+    movie.preventDefault();
 
-    const response = await api.get(``);
+    const {search} = this.state;
+    const movies = this.state.list_movies.title;
 
+    if(search === movies){
+      this.setState({
+        list_movies: this.state.list_movies.filter(search => search !== movie)
+      })
+    }
   }
+
 
   render() {
-    const { serach } = this.state;
+    const { search } = this.state;
 
     return (
       <Container>
         <Sidebar />
           <Content>
-            <Form onSubmit={this.handleSubmit}>
+            <Form /*onSubmit={() => this.handleSubmit(movie)}*/>
               <input
               type="text"
               placeholder="Search Movies"
-              value={serach}
+              value={search}
               onChange={this.handleInputChange}
               />
               <SubmitButton>
@@ -52,7 +60,19 @@ export default class Main extends Component{
               </SubmitButton>
             </Form>
 
-            <PreviewMovie />
+            <Movies>
+              {this.state.list_movies.map(movie =>(
+                <PreviewMovie
+                key={movie.id}
+                title={movie.title_long}
+                genres={movie.genres}
+                rating={movie.rating}
+                runtime={movie.runtime}
+                desc={movie.description_full}
+                img={movie.medium_cover_image}
+                />
+              ))}
+            </Movies>
           </ Content>
       </Container>
     );
