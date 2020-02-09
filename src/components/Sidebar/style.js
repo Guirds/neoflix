@@ -2,15 +2,12 @@ import styled from 'styled-components';
 
 export const Container = styled.aside`
   width: 200px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-
-
+  max-height: 670px;
   background: linear-gradient(to bottom, #414141 0%, #181818 125%), transparent;
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: top;
+  border-radius: 4px;
 
   a{
     text-decoration: none;
