@@ -39,3 +39,10 @@ export const SubmitButton = styled.button.attrs({
   align-items: center;
   cursor: pointer;
 `;
+
+export const Movies = styled.section`
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+`;
