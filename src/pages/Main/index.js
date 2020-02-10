@@ -15,17 +15,27 @@ export default class Main extends Component{
   };
 
   async componentDidMount(){
-    const response = await api.get('/list_movies.jsonp');
+    const list_movies = localStorage.getItem('movies');
 
-    this.setState({list_movies: response.data.data.movies});
+    if(list_movies) {
+      this.setState({ list_movies: JSON.parse(list_movies) });
+    } else{
+      const response = await api.get('/list_movies.jsonp');
+      this.setState({list_movies: response.data.data.movies});
+    }
+  };
 
-    console.log(this.state.list_movies);
+  componentDidUpdate(_, prevState){
+    const {list_movies} = this.state;
+
+    if(prevState.list_movies !== list_movies){
+      localStorage.setItem('movies', JSON.stringify(list_movies));
+    }
   }
-
 
   handleInputChange = e =>{
     this.setState({ search: e.target.value  });
-  }
+  };
 
   handleSubmit = movie =>{
     movie.preventDefault();
@@ -38,8 +48,7 @@ export default class Main extends Component{
         list_movies: this.state.list_movies.filter(search => search !== movie)
       })
     }
-  }
-
+  };
 
   render() {
     const { search } = this.state;
@@ -48,7 +57,7 @@ export default class Main extends Component{
       <Container>
         <Sidebar />
           <Content>
-            <Form /*onSubmit={() => this.handleSubmit(movie)}*/>
+            <Form onSubmit={() => this.handleSubmit()}>
               <input
               type="text"
               placeholder="Search Movies"
@@ -70,6 +79,7 @@ export default class Main extends Component{
                 runtime={movie.runtime}
                 desc={movie.description_full}
                 img={movie.medium_cover_image}
+                onClick={this.handleClick}
                 />
               ))}
             </Movies>
