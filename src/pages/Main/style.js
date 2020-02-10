@@ -15,7 +15,7 @@ export const Form = styled.form`
   margin: 30px;
   display: flex;
   flex-direction: row;
-  height: 50px;
+  height: 40px;
 
   input {
     border: 1px solid #eee;
